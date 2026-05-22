@@ -1,60 +1,98 @@
-# ImpactLedger Template
+# CarbonLedger 🌱
 
-## Sobre o desafio
-Template oficial do desafio ImpactLedger do Hackathon Web3 RESTIC 29.
+## Sobre o projeto
+CarbonLedger é uma solução baseada em blockchain para registro transparente e imutável de créditos de carbono, desenvolvida para o Hackathon Web3 RESTIC 29.
 
 ## Objetivo
-Construir uma solução baseada em blockchain capaz de registrar, validar e certificar ações de impacto social e ambiental.
+Transformar cada tonelada de CO₂ compensada em um token CCT (Carbon Credit Token) registrado na blockchain Sepolia — tornando o double spending tecnicamente impossível e a auditoria pública.
 
 ## Exemplos de aplicação
-- Certificação de voluntariado
-- NFTs comunitários
-- Registro de impacto ESG
-- Dashboard auditável
-- Plataforma de doações
-- Sistema de reciclagem
+- Tokenização de créditos de carbono (ERC-20)
+- Certificação automática on-chain de ações ambientais
+- Rastreamento de emissões ESG auditável
+- Registro de projetos de energia renovável
+- Validação de iniciativas de hidrogênio verde
+- Agricultura regenerativa e sequestro de carbono
 
-## Tecnologias sugeridas
-- Solidity
-- Hardhat
-- Sepolia
-- Polygon Mumbai
-- OpenZeppelin
-- IPFS
+## Tecnologias utilizadas
+- Solidity 0.8.20
+- Hardhat 2
+- Sepolia Testnet
 - Ethers.js
-- React
+- MetaMask
+- OpenZeppelin (padrões ERC-20)
+- IPFS (hash de evidências)
+- Node.js + Mocha + Chai
 
 ## Estrutura
-/contracts
-/frontend
-/scripts
-/test
-/docs
+/contratos       → Smart contracts Solidity
+/scripts         → Scripts de deploy
+/teste           → Testes Hardhat
+/front-end       → Interface (em desenvolvimento)
+/documentos      → Documentação do projeto
+/ativos          → Recursos visuais
+
+## Contrato deployado
+- **Rede:** Sepolia Testnet
+- **Endereço:** `0xE1b40941fc5Ad1BfB50Cd9f338fb0D1845Ce60F9`
+- **Etherscan:** [Ver contrato](https://sepolia.etherscan.io/address/0xE1b40941fc5Ad1BfB50Cd9f338fb0D1845Ce60F9)
 
 ## Como executar
+
+### Clonar o repositório
+```bash
+git clone https://github.com/EDNARDOPPEIXOTO99/CarbonLedger
+cd CarbonLedger
+```
 
 ### Instalar dependências
 ```bash
 npm install
 ```
 
+### Configurar .env
+RPC_URL=https://sepolia.infura.io/v3/SEU_ID
+PRIVATE_KEY=sua_chave_privada_metamask
+
 ### Compilar contratos
 ```bash
 npx hardhat compile
 ```
 
-### Deploy
+### Rodar testes
 ```bash
-npx hardhat run scripts/deploy.js --network sepolia
+npx hardhat test
 ```
 
+### Deploy na Sepolia
+```bash
+npx hardhat run scripts/deploy_carbon.js --network sepolia
+```
+
+### Verificar na Sepolia Etherscan
+https://sepolia.etherscan.io/address/0xE1b40941fc5Ad1BfB50Cd9f338fb0D1845Ce60F9
+
 ## Requisitos mínimos
-- Uso de blockchain
-- Registro auditável
-- Smart contract funcional
-- Histórico verificável
-- README funcional
-- Vídeo-pitch
+- [x] Uso de blockchain
+- [x] Registro auditável
+- [x] Smart contract funcional
+- [x] Histórico verificável
+- [x] README funcional
+- [ ] Vídeo-pitch
+- [ ] Slides
+
+## Testes
+✔ Deve registrar um crédito de carbono
+✔ Deve retornar os dados do registro corretamente
+✔ Deve emitir evento ao registrar carbono
+3 passing
 
 ## Equipe
-Adicionar integrantes aqui.
+| Nome | Papel |
+|------|-------|
+| Ednardo | Tech Lead / Desenvolvimento Smart Contracts / Repositório GitHub |
+| Alanio | Desenvolvimento Blockchain / Documentação |
+| Patrício | Produto / QA / Apresentação Slides e Pitch |
+
+## Licença
+MIT
