@@ -34,8 +34,8 @@ Transformar cada tonelada de CO₂ compensada em um token CCT (Carbon Credit Tok
 
 ## Contrato deployado
 - **Rede:** Sepolia Testnet
-- **Endereço:** `0xE1b40941fc5Ad1BfB50Cd9f338fb0D1845Ce60F9`
-- **Etherscan:** [Ver contrato](https://sepolia.etherscan.io/address/0xE1b40941fc5Ad1BfB50Cd9f338fb0D1845Ce60F9)
+- **Endereço:** `0x848F66f8fE812762176518E9a8141620247BB8ef
+- **Etherscan:** [Ver contrato](https://sepolia.etherscan.io/address/0x848F66f8fE812762176518E9a8141620247BB8ef)
 
 ## Como executar
 
