@@ -70,7 +70,7 @@ npx hardhat run scripts/deploy_carbon.js --network sepolia
 ```
 
 ### Verificar na Sepolia Etherscan
-https://sepolia.etherscan.io/address/0xE1b40941fc5Ad1BfB50Cd9f338fb0D1845Ce60F9
+https://sepolia.etherscan.io/address/0x055cBCC3368F95bb2a9eA99C7420A77a8557BA05
 
 ## Requisitos mínimos
 - [x] Uso de blockchain
@@ -90,9 +90,9 @@ https://sepolia.etherscan.io/address/0xE1b40941fc5Ad1BfB50Cd9f338fb0D1845Ce60F9
 ## Equipe
 | Nome | Papel |
 |------|-------|
-| Ednardo | Tech Lead / Desenvolvimento Smart Contracts / Repositório GitHub |
-| Alanio | Desenvolvimento Blockchain / Documentação |
-| Patrício | Produto / QA / Apresentação Slides e Pitch |
+| Ednardo Pinheiro Peixoto Líder Técnico | Líder Técnico / Desenvolvimento Smart Contracts / Repositório GitHub
+| Alanio Ferreira de Lima | Desenvolvimento Blockchain / Documentação
+| Patrício Robson dos Santos Alves | Produto / QA / Apresentação Slides e Pitch
 
 ## Licença
 MIT

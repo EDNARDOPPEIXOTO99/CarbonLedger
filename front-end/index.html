@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CarbonLedger 🌱</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.umd.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #0a0f1e;
+      color: #e0e0e0;
+      min-height: 100vh;
+    }
+
+    header {
+      background: linear-gradient(135deg, #0d2137, #0a4f2e);
+      padding: 24px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #1a3a2a;
+    }
+
+    header h1 { font-size: 1.8rem; color: #4cff91; }
+    header p { font-size: 0.85rem; color: #888; margin-top: 4px; }
+
+    #btnConectar {
+      background: #4cff91;
+      color: #0a0f1e;
+      border: none;
+      padding: 10px 22px;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 0.95rem;
+      transition: 0.2s;
+    }
+    #btnConectar:hover { background: #2ecc71; }
+
+    #statusCarteira {
+      font-size: 0.8rem;
+      color: #4cff91;
+      margin-top: 6px;
+      text-align: right;
+    }
+
+    .container { max-width: 1100px; margin: 0 auto; padding: 30px 20px; }
+
+    /* MÉTRICAS */
+    .metricas {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 30px;
+    }
+
+    .metrica-card {
+      background: #111827;
+      border: 1px solid #1a3a2a;
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .metrica-card .valor {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #4cff91;
+    }
+
+    .metrica-card .label {
+      font-size: 0.8rem;
+      color: #888;
+      margin-top: 4px;
+    }
+
+    /* GRID PAINÉIS */
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .painel {
+      background: #111827;
+      border: 1px solid #1a3a2a;
+      border-radius: 12px;
+      padding: 24px;
+    }
+
+    .painel h2 {
+      font-size: 1rem;
+      color: #4cff91;
+      margin-bottom: 16px;
+      border-bottom: 1px solid #1a3a2a;
+      padding-bottom: 10px;
+    }
+
+    input, select {
+      width: 100%;
+      background: #0d1b2a;
+      border: 1px solid #1a3a2a;
+      color: #e0e0e0;
+      padding: 10px 12px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      font-size: 0.9rem;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: #4cff91;
+    }
+
+    button {
+      width: 100%;
+      background: #0a4f2e;
+      color: #4cff91;
+      border: 1px solid #4cff91;
+      padding: 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 0.9rem;
+      transition: 0.2s;
+      margin-top: 4px;
+    }
+
+    button:hover { background: #4cff91; color: #0a0f1e; }
+    button:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    .log {
+      background: #0d1b2a;
+      border: 1px solid #1a3a2a;
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 0.8rem;
+      min-height: 80px;
+      max-height: 120px;
+      overflow-y: auto;
+      margin-top: 12px;
+      color: #aaa;
+    }
+
+    .log .ok { color: #4cff91; }
+    .log .erro { color: #ff4c4c; }
+    .log .info { color: #4c9fff; }
+
+    .cert-resultado {
+      background: #0d2a1a;
+      border: 1px solid #4cff91;
+      border-radius: 8px;
+      padding: 14px;
+      margin-top: 12px;
+      font-size: 0.85rem;
+      display: none;
+    }
+
+    .cert-resultado.invalido {
+      background: #2a0d0d;
+      border-color: #ff4c4c;
+    }
+
+    .contrato-info {
+      background: #0d1b2a;
+      border: 1px solid #1a3a2a;
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-size: 0.78rem;
+      color: #666;
+      margin-bottom: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .contrato-info a { color: #4cff91; text-decoration: none; }
+
+    @media (max-width: 768px) {
+      .metricas { grid-template-columns: repeat(2, 1fr); }
+      .grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>🌱 CarbonLedger</h1>
+    <p>Tokenização de Créditos de Carbono na Blockchain</p>
+  </div>
+  <div>
+    <button id="btnConectar" onclick="conectarCarteira()">Conectar MetaMask</button>
+    <div id="statusCarteira">Não conectado</div>
+  </div>
+</header>
+
+<div class="container">
+
+  <div class="contrato-info">
+    <span>📄 Contrato: <strong>0x055cBCC3368F95bb2a9eA99C7420A77a8557BA05</strong> · Sepolia Testnet</span>
+    <a href="https://sepolia.etherscan.io/address/0x055cBCC3368F95bb2a9eA99C7420A77a8557BA05" target="_blank">Ver no Etherscan ↗</a>
+  </div>
+
+  <!-- MÉTRICAS -->
+  <div class="metricas">
+    <div class="metrica-card">
+      <div class="valor" id="mAcoes">—</div>
+      <div class="label">Ações Registradas</div>
+    </div>
+    <div class="metrica-card">
+      <div class="valor" id="mSupply">—</div>
+      <div class="label">Tokens CCT em Circulação</div>
+    </div>
+    <div class="metrica-card">
+      <div class="valor" id="mResgatadas">—</div>
+      <div class="label">Toneladas Resgatadas</div>
+    </div>
+    <div class="metrica-card">
+      <div class="valor" id="mCerts">—</div>
+      <div class="label">Certificados Emitidos</div>
+    </div>
+  </div>
+
+  <div class="grid">
+
+    <!-- REGISTRAR ORGANIZAÇÃO -->
+    <div class="painel">
+      <h2>🏢 Registrar Organização</h2>
+      <input type="text" id="orgNome" placeholder="Nome da organização" />
+      <select id="orgTipo">
+        <option value="">Tipo da organização</option>
+        <option value="ONG">ONG</option>
+        <option value="Empresa">Empresa</option>
+        <option value="Governo">Governo</option>
+        <option value="Energia">Energia</option>
+        <option value="Agronegócio">Agronegócio</option>
+      </select>
+      <button onclick="registrarOrg()">Registrar Organização</button>
+      <div class="log" id="logOrg"><span class="info">Aguardando conexão...</span></div>
+    </div>
+
+    <!-- REGISTRAR AÇÃO AMBIENTAL -->
+    <div class="painel">
+      <h2>🌿 Registrar Ação Ambiental</h2>
+      <input type="text" id="acaoDesc" placeholder="Descrição da ação" />
+      <select id="acaoCategoria">
+        <option value="">Categoria</option>
+        <option value="Reflorestamento">Reflorestamento</option>
+        <option value="Energia Limpa">Energia Limpa</option>
+        <option value="Reciclagem">Reciclagem</option>
+        <option value="Agricultura Regenerativa">Agricultura Regenerativa</option>
+        <option value="Hidrogênio Verde">Hidrogênio Verde</option>
+      </select>
+      <input type="number" id="acaoToneladas" placeholder="Toneladas de CO₂" min="1" />
+      <input type="text" id="acaoHash" placeholder="Hash IPFS da evidência" />
+      <button onclick="registrarAcao()">Registrar Ação</button>
+      <div class="log" id="logAcao"><span class="info">Aguardando conexão...</span></div>
+    </div>
+
+    <!-- VERIFICAR CERTIFICADO -->
+    <div class="painel">
+      <h2>🔍 Verificar Certificado</h2>
+      <input type="text" id="certCodigo" placeholder="Cole o código do certificado" />
+      <button onclick="verificarCert()">Verificar Certificado</button>
+      <div class="cert-resultado" id="certResultado"></div>
+      <div class="log" id="logCert"><span class="info">Aguardando conexão...</span></div>
+    </div>
+
+    <!-- MEU SALDO -->
+    <div class="painel">
+      <h2>💰 Meu Saldo CCT</h2>
+      <button onclick="verSaldo()">Consultar Saldo</button>
+      <div class="log" id="logSaldo"><span class="info">Aguardando conexão...</span></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  const CONTRATO = "0x055cBCC3368F95bb2a9eA99C7420A77a8557BA05";
+  const ABI = [
+    "function registrarOrganizacao(string,string) external",
+    "function registrarAcao(string,string,uint256,string) external",
+    "function validarAcao(uint256) external",
+    "function resgatarCreditos(uint256,uint256) external",
+    "function verificarCertificado(string) external view returns(bool,uint256,address,uint256)",
+    "function metricas() external view returns(uint256,uint256,uint256,uint256)",
+    "function balanceOf(address) external view returns(uint256)",
+    "function name() external view returns(string)",
+    "function symbol() external view returns(string)",
+  ];
+
+  let provider, signer, contrato;
+
+  async function conectarCarteira() {
+    if (!window.ethereum) {
+      alert("MetaMask não encontrada! Instale em metamask.io");
+      return;
+    }
+    try {
+      provider = new ethers.BrowserProvider(window.ethereum);
+      await provider.send("eth_requestAccounts", []);
+      signer = await provider.getSigner();
+      contrato = new ethers.Contract(CONTRATO, ABI, signer);
+
+      const addr = await signer.getAddress();
+      const curto = addr.slice(0, 6) + "..." + addr.slice(-4);
+      document.getElementById("statusCarteira").textContent = "✅ " + curto;
+      document.getElementById("btnConectar").textContent = "Conectado";
+
+      await atualizarMetricas();
+      log("logOrg", "✅ Carteira conectada!", "ok");
+      log("logAcao", "✅ Carteira conectada!", "ok");
+      log("logCert", "✅ Carteira conectada!", "ok");
+      log("logSaldo", "✅ Carteira conectada!", "ok");
+    } catch (e) {
+      alert("Erro ao conectar: " + e.message);
+    }
+  }
+
+  async function atualizarMetricas() {
+    try {
+      const contratoLeitura = new ethers.Contract(CONTRATO, ABI, provider);
+      const [acoes, supply, resgatadas, certs] = await contratoLeitura.metricas();
+      document.getElementById("mAcoes").textContent = acoes.toString();
+      document.getElementById("mSupply").textContent = supply.toString();
+      document.getElementById("mResgatadas").textContent = resgatadas.toString();
+      document.getElementById("mCerts").textContent = certs.toString();
+    } catch (e) {
+      console.error("Erro métricas:", e);
+    }
+  }
+
+  async function registrarOrg() {
+    if (!contrato) return alert("Conecte a MetaMask primeiro!");
+    const nome = document.getElementById("orgNome").value.trim();
+    const tipo = document.getElementById("orgTipo").value;
+    if (!nome || !tipo) return alert("Preencha nome e tipo!");
+    try {
+      log("logOrg", "⏳ Enviando transação...", "info");
+      const tx = await contrato.registrarOrganizacao(nome, tipo);
+      log("logOrg", "⏳ Aguardando confirmação...", "info");
+      await tx.wait();
+      log("logOrg", "✅ Organização registrada: " + nome, "ok");
+      await atualizarMetricas();
+    } catch (e) {
+      log("logOrg", "❌ " + (e.reason || e.message), "erro");
+    }
+  }
+
+  async function registrarAcao() {
+    if (!contrato) return alert("Conecte a MetaMask primeiro!");
+    const desc = document.getElementById("acaoDesc").value.trim();
+    const cat = document.getElementById("acaoCategoria").value;
+    const ton = document.getElementById("acaoToneladas").value;
+    const hash = document.getElementById("acaoHash").value.trim() || "ipfs://sem-evidencia";
+    if (!desc || !cat || !ton) return alert("Preencha todos os campos!");
+    try {
+      log("logAcao", "⏳ Enviando transação...", "info");
+      const tx = await contrato.registrarAcao(desc, cat, parseInt(ton), hash);
+      log("logAcao", "⏳ Aguardando confirmação...", "info");
+      await tx.wait();
+      log("logAcao", "✅ Ação registrada: " + ton + "t CO₂", "ok");
+      await atualizarMetricas();
+    } catch (e) {
+      log("logAcao", "❌ " + (e.reason || e.message), "erro");
+    }
+  }
+
+  async function verificarCert() {
+    if (!contrato) return alert("Conecte a MetaMask primeiro!");
+    const codigo = document.getElementById("certCodigo").value.trim();
+    if (!codigo) return alert("Cole o código do certificado!");
+    try {
+      log("logCert", "⏳ Verificando...", "info");
+      const contratoLeitura = new ethers.Contract(CONTRATO, ABI, provider);
+      const [valido, toneladas, titular, timestamp] = await contratoLeitura.verificarCertificado(codigo);
+      const div = document.getElementById("certResultado");
+      div.style.display = "block";
+      if (valido) {
+        const data = new Date(Number(timestamp) * 1000).toLocaleDateString("pt-BR");
+        div.className = "cert-resultado";
+        div.innerHTML = `
+          <strong style="color:#4cff91">✅ Certificado Válido</strong><br><br>
+          🌿 <strong>Toneladas:</strong> ${toneladas} t CO₂<br>
+          👤 <strong>Titular:</strong> ${titular.slice(0,6)}...${titular.slice(-4)}<br>
+          📅 <strong>Data:</strong> ${data}
+        `;
+        log("logCert", "✅ Certificado válido!", "ok");
+      } else {
+        div.className = "cert-resultado invalido";
+        div.innerHTML = `<strong style="color:#ff4c4c">❌ Certificado Inválido</strong><br>Código não encontrado na blockchain.`;
+        log("logCert", "❌ Certificado inválido!", "erro");
+      }
+    } catch (e) {
+      log("logCert", "❌ " + e.message, "erro");
+    }
+  }
+
+  async function verSaldo() {
+    if (!contrato) return alert("Conecte a MetaMask primeiro!");
+    try {
+      const addr = await signer.getAddress();
+      const saldo = await contrato.balanceOf(addr);
+      log("logSaldo", "💰 Saldo CCT: " + saldo.toString() + " tokens", "ok");
+    } catch (e) {
+      log("logSaldo", "❌ " + e.message, "erro");
+    }
+  }
+
+  function log(id, msg, tipo) {
+    const el = document.getElementById(id);
+    el.innerHTML += `<div class="${tipo}">${msg}</div>`;
+    el.scrollTop = el.scrollHeight;
+  }
+
+  // Atualiza métricas ao carregar
+  window.addEventListener("load", async () => {
+    if (window.ethereum) {
+      provider = new ethers.BrowserProvider(window.ethereum);
+      await atualizarMetricas();
+    }
+  });
+</script>
+</body>
+</html>
