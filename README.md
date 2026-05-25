@@ -25,7 +25,6 @@ Transformar cada tonelada de CO₂ compensada em um token CCT (Carbon Credit Tok
 - Node.js + Mocha + Chai
 
 ## Estrutura
-
 ```
 /contratos       → Contratos inteligentes Solidity
 /scripts         → Scripts de deploy
@@ -37,7 +36,7 @@ Transformar cada tonelada de CO₂ compensada em um token CCT (Carbon Credit Tok
 
 ## Contrato deployado
 - **Rede:** Sepolia Testnet
-- **Endereço:** '0x055cBCC3368F95bb2a9eA99C7420A77a8557BA05'
+- **Endereço:** `0x055cBCC3368F95bb2a9eA99C7420A77a8557BA05`
 - **Etherscan:** [Ver contrato](https://sepolia.etherscan.io/address/0x055cBCC3368F95bb2a9eA99C7420A77a8557BA05)
 
 ## Como executar
@@ -54,8 +53,10 @@ npm install
 ```
 
 ### Configurar .env
+```
 RPC_URL=https://sepolia.infura.io/v3/SEU_ID
 PRIVATE_KEY=sua_chave_privada_metamask
+```
 
 ### Compilar contratos
 ```bash
@@ -72,8 +73,13 @@ npx hardhat test
 npx hardhat run scripts/deploy_carbon.js --network sepolia
 ```
 
+### Frontend
+Abre `front-end/index.html` com Live Server no VSCode e conecta a MetaMask na rede Sepolia.
+
 ### Verificar na Sepolia Etherscan
+```
 https://sepolia.etherscan.io/address/0x055cBCC3368F95bb2a9eA99C7420A77a8557BA05
+```
 
 ## Requisitos mínimos
 - [x] Uso de blockchain
@@ -81,21 +87,29 @@ https://sepolia.etherscan.io/address/0x055cBCC3368F95bb2a9eA99C7420A77a8557BA05
 - [x] Smart contract funcional
 - [x] Histórico verificável
 - [x] README funcional
+- [x] Frontend funcional
 - [ ] Vídeo-pitch
 - [ ] Slides
 
 ## Testes
-✔ Deve registrar um crédito de carbono
-✔ Deve retornar os dados do registro corretamente
-✔ Deve emitir evento ao registrar carbono
-3 passing
+```
+✔ Token Metadata (3 testes)
+✔ Organizações (3 testes)
+✔ Ações Ambientais (4 testes)
+✔ Validação e Mint (4 testes)
+✔ Resgate e Certificado (3 testes)
+✔ Verificação de Certificado (2 testes)
+✔ ERC-20 (2 testes)
+✔ Métricas (1 teste)
+22 passing (814ms)
+```
 
 ## Equipe
 | Nome | Papel |
 |------|-------|
-| Ednardo Pinheiro Peixoto Líder Técnico | Líder Técnico / Desenvolvimento Smart Contracts / Repositório GitHub
-| Alanio Ferreira de Lima | Desenvolvimento Blockchain / Documentação
-| Patrício Robson dos Santos Alves | Produto / QA / Apresentação Slides e Pitch
+| Ednardo Pinheiro Peixoto | Líder Técnico / Desenvolvimento Smart Contracts / Repositório GitHub |
+| Alanio Ferreira de Lima | Desenvolvimento Blockchain / Documentação |
+| Patrício Robson dos Santos Alves | Produto / QA / Apresentação Slides e Pitch |
 
 ## Licença
 MIT
