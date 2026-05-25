@@ -25,12 +25,15 @@ Transformar cada tonelada de CO₂ compensada em um token CCT (Carbon Credit Tok
 - Node.js + Mocha + Chai
 
 ## Estrutura
-/contratos       → Smart contracts Solidity
+
+```
+/contratos       → Contratos inteligentes Solidity
 /scripts         → Scripts de deploy
 /teste           → Testes Hardhat
-/front-end       → Interface (em desenvolvimento)
+/front-end       → Interface do usuário
 /documentos      → Documentação do projeto
 /ativos          → Recursos visuais
+```
 
 ## Contrato deployado
 - **Rede:** Sepolia Testnet
